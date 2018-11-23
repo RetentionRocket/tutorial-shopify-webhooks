@@ -1,0 +1,333 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Shopify Webhooks</title>
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight .gh {
+  color: #999999;
+}
+.highlight .sr {
+  color: #f6aa11;
+}
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .nb {
+  color: #f6aa11;
+}
+.highlight .cm {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #75715e;
+}
+.highlight .c1 {
+  color: #75715e;
+}
+.highlight .cs {
+  color: #75715e;
+}
+.highlight .c, .highlight .cd {
+  color: #75715e;
+}
+.highlight .err {
+  color: #960050;
+}
+.highlight .gr {
+  color: #960050;
+}
+.highlight .gt {
+  color: #960050;
+}
+.highlight .gd {
+  color: #49483e;
+}
+.highlight .gi {
+  color: #49483e;
+}
+.highlight .ge {
+  color: #49483e;
+}
+.highlight .kc {
+  color: #66d9ef;
+}
+.highlight .kd {
+  color: #66d9ef;
+}
+.highlight .kr {
+  color: #66d9ef;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .kt {
+  color: #66d9ef;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
+}
+.highlight .sc {
+  color: #ae81ff;
+}
+.highlight .se {
+  color: #ae81ff;
+}
+.highlight .ss {
+  color: #ae81ff;
+}
+.highlight .sd {
+  color: #e6db74;
+}
+.highlight .s2 {
+  color: #e6db74;
+}
+.highlight .sb {
+  color: #e6db74;
+}
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
+}
+.highlight .s {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+}
+.highlight .nd {
+  color: #a6e22e;
+}
+.highlight .ne {
+  color: #a6e22e;
+}
+.highlight .nf {
+  color: #a6e22e;
+}
+.highlight .vc {
+  color: #ffffff;
+}
+.highlight .nn {
+  color: #ffffff;
+}
+.highlight .nl {
+  color: #ffffff;
+}
+.highlight .ni {
+  color: #ffffff;
+}
+.highlight .bp {
+  color: #ffffff;
+}
+.highlight .vg {
+  color: #ffffff;
+}
+.highlight .vi {
+  color: #ffffff;
+}
+.highlight .nv {
+  color: #ffffff;
+}
+.highlight .w {
+  color: #ffffff;
+}
+.highlight {
+  color: #ffffff;
+}
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #ffffff;
+}
+.highlight .ow {
+  color: #f92672;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight .k, .highlight .kv {
+  color: #f92672;
+}
+.highlight .kn {
+  color: #f92672;
+}
+.highlight .kp {
+  color: #f92672;
+}
+.highlight .o {
+  color: #f92672;
+}
+    </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all.js"></script>
+  </head>
+
+  <body class="index" data-languages="[]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" alt="Navbar" />
+      </span>
+    </a>
+    <div class="toc-wrapper">
+      <img src="images/logo.png" class="logo" alt="Learn Ruby on Rails" style="padding:1em;">>
+      <div style="color:white;padding:1em;margin-top:-2em;">
+        A tutorial from the author of
+        <a href="http://learn-rails.com/learn-ruby-on-rails.html" style="color:gray;"><em>Learn Ruby on Rails</em></a>,
+        sponsored by <a href="https://www.retentionrocket.com/" style="color:gray;">Retention Rocket</a>, retention marketing for ecommerce shops.
+      </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search the article">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc" class="toc-list-h1">
+          <li>
+            <a href="#shopify-webhooks" class="toc-h1 toc-link" data-title="shopify-webhooks">Shopify Webhooks</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#introduction" class="toc-h2 toc-link" data-title="introduction">Introduction</a>
+                  </li>
+                  <li>
+                    <a href="#scope-and-tasks" class="toc-h2 toc-link" data-title="scope-and-tasks">Scope and Tasks</a>
+                  </li>
+                  <li>
+                    <a href="#tunnel-to-localhost" class="toc-h2 toc-link" data-title="tunnel-to-localhost">Tunnel to Localhost</a>
+                  </li>
+                  <li>
+                    <a href="#shopify-partner-account" class="toc-h2 toc-link" data-title="shopify-partner-account">Shopify Partner Account</a>
+                  </li>
+                  <li>
+                    <a href="#create-a-development-store" class="toc-h2 toc-link" data-title="create-a-development-store">Create a Development Store</a>
+                  </li>
+                  <li>
+                    <a href="#test-webhooks" class="toc-h2 toc-link" data-title="test-webhooks">Test Webhooks</a>
+                  </li>
+                  <li>
+                    <a href="#rails-api-application" class="toc-h2 toc-link" data-title="rails-api-application">Rails API Application</a>
+                  </li>
+              </ul>
+          </li>
+      </div>
+        <ul class="toc-footer">
+            <li>This document is open source</li>
+            <li>Questions? <a href='https://stackoverflow.com/questions/tagged/ruby-on-rails'>Ask on Stack Overflow</a></li>
+            <li>Have fixes? <a href='https://github.com/RetentionRocket/tutorial-shopify-webhooks'>Edit the GitHub repo</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id='shopify-webhooks'>Shopify Webhooks</h1>
+<p><strong>by Daniel Kehoe</strong></p>
+
+<p><em>Last updated 23 November 2018</em></p>
+<h2 id='introduction'>Introduction</h2>
+<blockquote>
+<p>This &quot;code column&quot; contains code examples. Read the adjacent column for explanation and details.</p>
+</blockquote>
+
+<p>Shopify provides a powerful ecommerce platform. The platform is robust and full-featured, to the degree that most developers will not wish to build an ecommerce application from scratch. Instead, many developers use Shopify to build ecommerce sites. If you need functionality or features that are not available in Shopify, or wish to extend Shopify,  the Shopify platform can send <em>webhooks</em> to a custom application. Webhooks are HTTP requests that are triggered by visitor actions in Shopify shops, such as adding to a cart or placing an order. Almost all visitor events can trigger a webhook and the webhook will contain a payload of data in a JSON object that you can process in another application.</p>
+
+<p>This tutorial is based on work done for the <a href="https://www.retentionrocket.com/">Retention Rocket</a> platform.</p>
+<h2 id='scope-and-tasks'>Scope and Tasks</h2>
+<p>In this tutorial, you&#39;ll learn how to create a Rails API application that receives Shopify webhooks.</p>
+
+<p>A webhook is an HTTP request sent by an application and triggered by a programmatic event. Shopify can be configured to send webhooks for any significant visitor behavior.</p>
+
+<p>You can use the <a href="https://github.com/Shopify/shopify_app">shopify_app gem</a> to write Rails applications that handle Shopify webhooks. The gem handles the necessary authentication and can manage Shopify webhooks. The gem is primarily intended to enable custom storefronts to make API calls for processing by the Shopify API (for example, processing orders and payments). The gem includes a Rails Engine and various generators for controllers, models, and views. Other tutorials show how to add the shopify_app gem to a Rails application for that purpose. We will not explore the use of the shopify_app gem for creating storefronts. In this tutorial, we&#39;ll look at a different use case. We&#39;ll build a Rails API application (with no views or user-facing UI) that processes events triggered by visitor actions in a Shopify store. This use case is important for analytics or applications that support or extend basic ecommerce functionality. For example, this approach is used by the <a href="https://www.retentionrocket.com/">Retention Rocket</a> service to reduce cart abandonment.</p>
+
+<p>If you&#39;ve searched the web for tutorials about Shopify webhooks, you may have learned that you can create webhooks programmatically using the Shopify API and the shopify_app gem. That means you can build a Rails application, install the shopify_app gem for Shopify API access, and write code that configures a Shopify store to set up webhooks via API calls. Before you start down that path, recognize that you can create Shopify webhooks manually using the Shopify store admin interface. You may not need to create webhooks programmatically, in which case it is simpler to create Shopify webhooks manually. This tutorial will focus on manual creation of webhooks for simplicity.</p>
+
+<p>First you&#39;ll set up a &quot;tunnel&quot; using <a href="https://ngrok.com/">Ngrok</a> so Shopify can send HTTP requests to your local development machine. Then you&#39;ll create a Shopify partner account, a development store, and create a webhook for testing. We&#39;ll show you how to build a Rails API application that will respond to Shopify HTTP requests and you can send test webhooks from your development store and observe the HTTP requests in Ngrok and your local server console.</p>
+<h2 id='tunnel-to-localhost'>Tunnel to Localhost</h2>
+<p>The Shopify application can send HTTP requests to any web address you specify as a webhook &quot;endpoint&quot; or destination. Notably, that doesn&#39;t include servers running on &quot;localhost&quot; because most local development machines are not exposed to the public Internet with a fixed IP address (Internet service providers typically assign IP addresses dynamically and the addresses are not publicly advertised). That means you must run a program on your local machine that sets up a &quot;tunnel&quot; from a localhost port to a public proxy service that can receive and forward HTTP requests. Several services are available (see <a href="https://john-sheehan.com/blog/a-survey-of-the-localhost-proxying-landscape">A Survey of the Localhost Proxying Landscape</a>). We&#39;ll use <a href="https://ngrok.com/">Ngrok</a> as it is the most popular and allows monitoring (&quot;introspection&quot;) of the HTTP requests passing through the tunnel.</p>
+
+<p>You can use <a href="https://ngrok.com/pricing">Ngrok for free</a> and it will assign a public URL randomly each time you run the ngrok application. It&#39;s more convenient to sign up for an account at a cost of $5/month and set up a reserved subdomain. If you&#39;re working for someone who already has a paid Ngrok account, ask them to <a href="https://dashboard.ngrok.com/team">invite you as a team member</a>. Sign up for an Ngrok account using GitHub authentication (or use an email address and password). Set up a <a href="https://dashboard.ngrok.com/reserved">reserved domain</a> in Ngrok, for example,  <a href="https://my-ngrok-example.ngrok.io">my-ngrok-example.ngrok.io</a> in the United States region. Later, you&#39;ll set this web address as an endpoint for a webhook in your Shopify development store.</p>
+
+<p><a href="https://ngrok.com/download">Download and set up the Ngrok client</a>. You&#39;ll need to visit the Ngrok dashboard and get an authentication token and run a one-time command that adds the authentication token to a configuration file. Then you can launch the Ngrok client to open a tunnel from a localhost port to the Ngrok public proxy. You&#39;ll enter a command like this to launch the Ngrok client:</p>
+
+<p><code>$ ngrok http 3000 -subdomain=my-ngrok-example</code></p>
+
+<p>This will allow you to send HTTP requests to <a href="https://my-ngrok-example.ngrok.io/">https://my-ngrok-example.ngrok.io/</a>.</p>
+
+<p>The Ngrok client is launched from your terminal and displays any incoming HTTP requests in the console. A local web interface is available at <a href="http://127.0.0.1:4040">http://127.0.0.1:4040</a> for inspecting the incoming HTTP requests.</p>
+
+<p>Try the Ngrok destination URL in a browser:</p>
+
+<ul>
+<li><a href="https://my-ngrok-example.ngrok.io/">https://my-ngrok-example.ngrok.io/</a></li>
+</ul>
+
+<p>You&#39;ll see a &quot;502 Bad Gateway&quot; error in the console running the Ngrok client. The web interface at <a href="http://127.0.0.1:4040">http://127.0.0.1:4040</a> will show details of the failed request. Your browser will display a page with the message &quot;Failed to complete tunnel connection&quot; because there is no web application server responding to HTTP requests on your localhost port 3000. We&#39;ll need to build a Rails application to respond to HTTP requests forwarded by Ngrok.</p>
+
+<p>Now that Ngrok is set up in the middle to receive HTTP requests from Shopify and pass them to a localhost application, you&#39;ll need to set up a Shopify development store to send HTTP requests to Ngrok. You&#39;ll also need to create a local Rails application to receive the HTTP requests from the Ngrok proxy. If you launched the Ngrok client already, exit with control-c and launch it again when everything is ready.</p>
+<h2 id='shopify-partner-account'>Shopify Partner Account</h2>
+<p>You&#39;ll need a Shopify partner account to create a development store and set up webhooks. Shopify primarily targets designers and developers of ecommerce stores for the partner program. In this context, you&#39;re a third-party developer but you&#39;ll still need a Shopify partner account. Visit the Shopify site to <a href="https://www.shopify.ca/partners">create a Shopify partner account</a>.</p>
+<h2 id='create-a-development-store'>Create a Development Store</h2>
+<p>Log in to your Shopify partner account to <a href="https://help.shopify.com/en/partners/dashboard/development-stores">create a development store</a>. You&#39;ll click &quot;Development stores&quot; and then click &quot;Create store.&quot;</p>
+
+<p>Note that you must use your account email as the login for the development store. If you are a collaborator or staff on someone else&#39;s account, the login cannot be changed and the account owner will get notifications generated by the development store. It&#39;s not clear why Shopify requires the account owner&#39;s login and why it cannot be changed.</p>
+
+<p>You can &quot;Add product&quot; to the store, or make any other changes you like, but it is not necessary if you just want to test webhooks.</p>
+<h2 id='test-webhooks'>Test Webhooks</h2>
+<p>We&#39;ve set up a development store so we can generate and test webhooks. Look for the &quot;Settings&quot; link in the lower left corner of the Shopify store admin page (<a href="https://example-store.myshopify.com/admin">https://example-store.myshopify.com/admin</a>). The &quot;Settings&quot; link is easy to overlook in the lower left corner. Click &quot;Settings&quot; and look for the &quot;Notifications&quot; link.</p>
+
+<p>Scroll to the bottom of the &quot;Settings/Notifications&quot; page. The &quot;Webhooks&quot; section is at the bottom of the page. Click the button to &quot;Create webhook.&quot; For testing, choose &quot;Cart creation&quot; as the event with a &quot;JSON&quot; format.</p>
+
+<p>You must provide a URL that will respond to the HTTP request that Shopify will send when you test the webhook. You&#39;ve already set up Ngrok with a reserved subdomain. Enter the web address:</p>
+
+<p><code>https://my-ngrok-example.ngrok.io/webhooks/cart_create</code></p>
+
+<p>You can give any URL path you like as a web address as a substitute for <code>cart_create</code> but stick with our example for now. The shopify_app gem expects to see the <code>webhooks</code> path as the default route to its Shopify engine controller, so don&#39;t change that unless you are prepared to dig deeper into the <a href="https://github.com/Shopify/shopify_app">shopify_app gem</a> documentation.</p>
+
+<p>Click &quot;Save webhook&quot; and you&#39;ll see the webhook listed on the &quot;Settings/Notifications&quot; page in the &quot;Webhooks&quot; section. Notice the link &quot;Send test notification.&quot; Launch your local Ngrok client:</p>
+
+<p><code>$ ngrok http 3000 -subdomain=my-ngrok-example</code></p>
+
+<p>Click &quot;Send test notification&quot; and look for the &quot;502 Bad Gateway&quot; error in the local Ngrok console. You&#39;ve sent a webhook from Shopify and the Ngrok proxy has forwarded it to the localhost port 3000. No application is available to receive the HTTP request on localhost port 3000 so the Ngrok client reports a &quot;502 Bad Gateway&quot; error. However, if you&#39;ve gotten this far, you are successful in setting up Shopify to send webhooks to your local development machine. Now we can build a Rails application to respond to the Shopify webhooks.</p>
+<h2 id='rails-api-application'>Rails API Application</h2>
+      </div>
+      <div class="dark-box">
+      </div>
+    </div>
+  </body>
+</html>
