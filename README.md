@@ -21,7 +21,7 @@ Copy the project files to your local environment using `git clone`.
 
 ```bash
 $ git clone https://github.com/RetentionRocket/tutorial-shopify-webhooks
-$ cd tutorial-rocketsdk
+$ cd tutorial-shopify-webhooks
 ```
 
 You're in the tutorial project folder.
