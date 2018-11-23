@@ -1,7 +1,7 @@
 
 # Tutorial: Shopify Webhooks
 
-The tutorial [Shopify Webhooks](https://railsapps.github.io/tutorial-shopify-webhooks/) shows how to create a Rails API application that receives Shopify webhooks.
+The tutorial [Shopify Webhooks](https://retentionrocket.github.io/tutorial-shopify-webhooks/) shows how to create a Rails API application that receives Shopify webhooks.
 
 This repository contains the *source/index.html.md* file for the tutorial content as well as the [Slate](https://github.com/lord/slate) document generator.
 
@@ -47,7 +47,7 @@ Save your file, commit with git and push the changes to Github, and deploy it as
 $ ./deploy.sh
 ```
 
-Deploying the tutorial makes it available publicly at [https://railsapps.github.io/tutorial-shopify-webhooks/](https://railsapps.github.io/tutorial-shopify-webhooks/).
+Deploying the tutorial makes it available publicly at [https://retentionrocket.github.io/tutorial-shopify-webhooks/](https://retentionrocket.github.io/tutorial-shopify-webhooks/).
 
 ## Questions? Need Help? Found a bug?
 
