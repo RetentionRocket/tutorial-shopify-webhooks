@@ -153,6 +153,10 @@ module ShopifyWebhooks
 end
 ```
 
+<aside class="warning">
+TODO: Do we need to uncomment "sprockets/railtie"? Is it only a problem if we use the shopify_app generators?
+</aside>
+
 The shopify_app engine requires cookie session storage and access to Rails Sprockets. A Rails application generated with the `--api` argument doesn't contain session storage or Rails Sprockets so we'll add as necessary. Modify the file *config/application.rb*:
 
 Uncomment:
