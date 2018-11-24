@@ -18,7 +18,7 @@ search: true
 
 **by Daniel Kehoe**
 
-_Last updated 23 November 2018_
+_Last updated 24 November 2018_
 
 ## Introduction
 
@@ -86,10 +86,188 @@ You must provide a URL that will respond to the HTTP request that Shopify will s
 
 You can give any URL path you like as a web address as a substitute for `cart_create` but stick with our example for now. The shopify_app gem expects to see the `webhooks` path as the default route to its Shopify engine controller, so don't change that unless you are prepared to dig deeper into the [shopify_app gem](https://github.com/Shopify/shopify_app) documentation.
 
-Click "Save webhook" and you'll see the webhook listed on the "Settings/Notifications" page in the "Webhooks" section. Notice the link "Send test notification." Launch your local Ngrok client:
+Click "Save webhook" and you'll see the webhook listed on the "Settings/Notifications" page in the "Webhooks" section.
+
+Make a note of the API key that is displayed below the webhook (after the text "All your webhooks will be signed with..."). When we create a Rails application, you'll need to create a Shopify initializer file (or Unix environment variable) to provide this authentication key to the Shopify_app engine.
+
+ Notice the link "Send test notification." Launch your local Ngrok client:
 
 `$ ngrok http 3000 -subdomain=my-ngrok-example`
 
 Click "Send test notification" and look for the "502 Bad Gateway" error in the local Ngrok console. You've sent a webhook from Shopify and the Ngrok proxy has forwarded it to the localhost port 3000. No application is available to receive the HTTP request on localhost port 3000 so the Ngrok client reports a "502 Bad Gateway" error. However, if you've gotten this far, you are successful in setting up Shopify to send webhooks to your local development machine. Now we can build a Rails application to respond to the Shopify webhooks.
 
 ## Rails API Application
+
+If you're new to Rails, you can learn [how to install Rails](http://railsapps.github.io/installrubyonrails-mac.html) and set up your development environment. Let's check that Ruby and Rails are installed. You'll need Ruby 2.5 (or newer) and Rails 5.2 (or newer) on your computer to follow this tutorial.
+
+`$ ruby -v`
+
+`$ rails -v`
+
+### New Rails API Application
+
+Generate a simple Rails default starter application:
+
+`$ rails new shopify-webhooks --api`
+
+You can give the application any name you like. We'll call it `shopify-webhooks`. The `--api` argument is available in Rails 5.0 (and newer) and generates an API-centric application without view files and other code required for a user-facing interface.
+
+A Rails API application is faster and contains less code than a conventional Rails application. However, the authentication strategy implemented by the shopify_app gem requires cookies for session persistence. Session persistence is not implemented by default in a Rails API application so we'll add it by modifying the application.
+
+### Shopify Gem
+
+Open the Gemfile and add the [shopify_app gem](https://github.com/Shopify/shopify_app) at the end of the file:
+
+`gem 'shopify_app'`
+
+Install the gem with Bundler.
+
+`$ bundle install`
+
+The [README](https://github.com/Shopify/shopify_app) documentation for the shopify_app gem explains how to use shopify_app generators to create configuration and view files. We are building an API-only application, so we won't use the shopify_app `shopify_app:install` generator. We'll use the generator to create a `Shop` model and then create the necessary files manually.
+
+### Shop Model
+
+The shopify_app engine requires a `Shop` model as part of the authentication strategy.
+
+Use the shopify_app generator to create a `Shop` model:
+
+`$ rails generate shopify_app:shop_model`
+
+The generator will create a file *app/models/shop.rb* and modify the file *config/initializers/shopify_app.rb*.
+
+```ruby
+class Shop < ApplicationRecord
+  include ShopifyApp::SessionStorage
+end
+```
+
+This model includes the `ShopifyApp::SessionStorage` concern from the shopify_app gem which adds two methods to make it compatible as a `SessionRepository`.
+
+The shopify_app generator will create a database migration:
+
+```ruby
+class AddShopifyToShops < ActiveRecord::Migration[5.1]
+  def change
+    add_column :shops, :shopify_domain, :string, null: false
+    add_column :shops, :shopify_token, :string, null: false
+    add_index :shops, :shopify_domain, unique: true
+  end
+end
+```
+
+Run the migration to create the Shops table:
+
+`$ rails db:migrate`
+
+### Modify *config/application.rb*
+
+The shopify_app engine requires cookie session storage and access to Rails Sprockets. A Rails application generated with the `--api` argument doesn't contain session storage or Rails Sprockets so we'll add as necessary. Modify the file *config/application.rb*:
+
+Uncomment:
+
+`require "sprockets/railtie"`
+
+Add:
+
+`config.middleware.use ActionDispatch::Cookies`
+
+`config.middleware.use ActionDispatch::Session::CookieStore`
+
+### Modify *config/routes.rb*
+
+Add the shopify_app engine:
+
+`mount ShopifyApp::Engine, at: '/'`
+
+### CheckoutsUpdateJob
+
+Create a file *app/jobs/checkouts_update_job.rb*.
+
+```ruby
+class CheckoutsUpdateJob < ActiveJob::Base
+  def perform(shop_domain:, webhook:)
+    Rails.logger.info "CheckoutsUpdateJob"
+  end
+end
+```
+
+### OmniAuth Initializer
+
+<aside class="warning">
+TODO: Is this needed?
+</aside>
+
+Add a file `config/initializers/omniauth.rb`:
+
+```ruby
+Rails.application.config.middleware.use OmniAuth::Builder do
+  provider :shopify, ENV['SHOPIFY_API_KEY'], ENV['SHOPIFY_API_SECRET'],
+    scope: 'read_customers',
+    setup: lambda { |env| params = Rack::Utils.parse_query(env['QUERY_STRING'])
+                        env['omniauth.strategy'].options[:client_options][:site] = "http://#{params['shop']}" }
+end
+```
+
+### Shopify Initializer
+
+<aside class="warning">
+TODO: Is 'config.session_repository = Shop' needed?
+</aside>
+
+Add a file `config/initializers/shopify_app.rb`:
+
+```ruby
+ShopifyApp.configure do |config|
+  config.application_name = "RetentionRocket"
+  config.api_key = ENV["SHOPIFY_API_KEY"]
+  config.secret = ENV["SHOPIFY_API_SECRET"]
+  config.scope = "read_orders, read_products"
+  config.embedded_app = true
+  config.after_authenticate_job = false
+  config.session_repository = Shop
+end
+```
+
+### Set Credentials
+
+The Shopify engine only responds to webhook HTTP requests if it can authenticate the request.
+
+For the best security, it is advisable to keep API credentials out of your code so they won't become publicly visible in a GitHub repository. To that end, we've set up the Shopify initializer file to obtain Shopify credentials from Unix environment variables. You'll need to set two Unix environment variables:
+
+* SHOPIFY_API_KEY
+* SHOPIFY_API_SECRET
+
+You can find the SHOPIFY_API_KEY on the Shopify development store "Settings/Notification" page at [https://example-store.myshopify.com/admin/settings/notifications](https://example-store.myshopify.com/admin/settings/notifications). It is not labeled as an API key but it appears after the text "All your webhooks will be signed with...".
+
+Add your Shopify credentials to your *.bash_profile* or *.bashrc* file:
+
+`export SHOPIFY_API_KEY="some_long_string"`
+
+`export SHOPIFY_API_SECRET="another_long_string"`
+
+<aside class="warning">
+TODO: Is the SHOPIFY_API_SECRET needed? Where do we find it?
+</aside>
+
+Close and reopen your terminal to make sure the environment is updated with the recent changes.
+
+### Shopify Session Initializer
+
+<aside class="warning">
+TODO: Is this needed?
+</aside>
+
+Add a file `config/initializers/shopify_session_repository.rb`:
+
+```ruby
+if Rails.configuration.cache_classes
+  ShopifyApp::SessionRepository.storage = Shop
+else
+  reloader = defined?(ActiveSupport::Reloader) ? ActiveSupport::Reloader : ActionDispatch::Reloader
+
+  reloader.to_prepare do
+    ShopifyApp::SessionRepository.storage = Shop
+  end
+end
+```
