@@ -165,56 +165,6 @@ Below the statement `config.api_only = true`, add:
 
 `config.middleware.use ActionDispatch::Session::CookieStore`
 
-### Routes
-
-```ruby
-Rails.application.routes.draw do
-  mount ShopifyApp::Engine, at: '/'
-end
-```
-Modify the file *config/application.rb*. Add the shopify_app engine:
-
-`mount ShopifyApp::Engine, at: '/'`
-
-You can check that the shopify_app engine has added new routes:
-
-`$ rails routes`
-
-The routes should include a route with `/webhooks/`.
-
-### Shopify Initializer
-
-Add a file `config/initializers/shopify_app.rb` (see the adjacent code column).
-
-```ruby
-ShopifyApp.configure do |config|
-  config.application_name = "MyShopifyWebhooks"
-  config.secret = ENV["SHOPIFY_API_SECRET"]
-  config.scope = "read_orders, read_products"
-  config.embedded_app = true
-  config.after_authenticate_job = false
-  config.session_repository = Shop
-end
-```
-
-Next we will set the Shopify credentials for authentication.
-
-### Set Credentials
-
-The Shopify engine only responds to webhook HTTP requests if it can authenticate the request.
-
-For the best security, it is advisable to keep API credentials out of your code so they won't become publicly visible in a GitHub repository. To that end, we've set up the Shopify initializer file to obtain Shopify credentials from Unix environment variables. You'll need to set a Unix environment variable:
-
-* SHOPIFY_API_SECRET
-
-You can find the SHOPIFY_API_SECRET on the Shopify development store "Settings/Notification" page at [https://example-store.myshopify.com/admin/settings/notifications](https://example-store.myshopify.com/admin/settings/notifications). It is not labeled as an API secret key but it appears after the text "All your webhooks will be signed with...".
-
-Add your Shopify credential to your *.bash_profile* or *.bashrc* file:
-
-`export SHOPIFY_API_SECRET="another_long_string"`
-
-Close and reopen your terminal to make sure the environment is updated with the recent changes.
-
 Next we will create a `Shop` model to accommodate the authentication strategy.
 
 ### Shop Model
@@ -255,6 +205,58 @@ end
 Run the migration to create the Shops table:
 
 `$ rails db:migrate`
+
+### Shopify Initializer
+
+Add a file `config/initializers/shopify_app.rb` (see the adjacent code column).
+
+```ruby
+ShopifyApp.configure do |config|
+  config.application_name = "MyShopifyWebhooks"
+  config.secret = ENV["SHOPIFY_API_SECRET"]
+  config.scope = "read_orders, read_products"
+  config.embedded_app = true
+  config.after_authenticate_job = false
+  config.session_repository = Shop
+end
+```
+
+Next we will set the Shopify credentials for authentication.
+
+### Set Credentials
+
+The Shopify engine only responds to webhook HTTP requests if it can authenticate the request.
+
+For the best security, it is advisable to keep API credentials out of your code so they won't become publicly visible in a GitHub repository. To that end, we've set up the Shopify initializer file to obtain Shopify credentials from Unix environment variables. You'll need to set a Unix environment variable:
+
+* SHOPIFY_API_SECRET
+
+You can find the SHOPIFY_API_SECRET on the Shopify development store "Settings/Notification" page at [https://example-store.myshopify.com/admin/settings/notifications](https://example-store.myshopify.com/admin/settings/notifications). It is not labeled as an API secret key but it appears after the text "All your webhooks will be signed with...".
+
+Add your Shopify credential to your *.bash_profile* or *.bashrc* file:
+
+`export SHOPIFY_API_SECRET="another_long_string"`
+
+Close and reopen your terminal to make sure the environment is updated with the recent changes.
+
+### Routes
+
+```ruby
+Rails.application.routes.draw do
+  mount ShopifyApp::Engine, at: '/'
+end
+```
+Modify the file *config/application.rb*. Add the shopify_app engine:
+
+`mount ShopifyApp::Engine, at: '/'`
+
+You can check that the shopify_app engine has added new routes:
+
+`$ rails routes`
+
+The routes should include a route with `/webhooks/`.
+
+The shopify_app engine controller will respond to HTTP requests containing `/webhooks/` in the URL path and attempt to initiate a background job that corresponds to the action specified in the URL. We've set up a webhook in the Shopify development store `https://my-ngrok-example.ngrok.io/webhooks/cart_create` so we'll need a `CartCreateJob` class for the shopify_app engine controller. Shopify relies on "magic" here; that is, the shopify_app engine eliminates custom programming or configuration steps by establishing a convention that an action specified in a URL path will be processed by a job with a corresponding class name.
 
 ### CartCreateJob
 
