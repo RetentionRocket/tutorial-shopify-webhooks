@@ -18,7 +18,7 @@ search: true
 
 **by Daniel Kehoe**
 
-_Last updated 24 November 2018_
+_Last updated 25 November 2018_
 
 ## Introduction
 
@@ -136,7 +136,7 @@ The [README](https://github.com/Shopify/shopify_app) documentation for the shopi
 
 First we'll modify the application to accommodate cookie storage. Then we'll create configuration files manually and add a `Shop` model.
 
-### Modify *config/application.rb*
+### Application Configuration
 
 ```ruby
 ...
@@ -153,11 +153,7 @@ module ShopifyWebhooks
 end
 ```
 
-<aside class="warning">
-TODO: Do we need to uncomment "sprockets/railtie"? Is it only a problem if we use the shopify_app generators?
-</aside>
-
-The shopify_app engine requires cookie session storage and access to Rails Sprockets. A Rails application generated with the `--api` argument doesn't contain session storage or Rails Sprockets so we'll add as necessary. Modify the file *config/application.rb*:
+The shopify_app engine requires cookie session storage. It also requires Rails Sprockets because the shopify_app engine attempts to precompile JavaScript assets using Rails Sprockets when the application is launched. A Rails application generated with the `--api` argument doesn't contain session storage or Rails Sprockets so we'll add as necessary. Modify the file *config/application.rb*:
 
 Uncomment:
 
@@ -169,7 +165,7 @@ Below the statement `config.api_only = true`, add:
 
 `config.middleware.use ActionDispatch::Session::CookieStore`
 
-### Modify *config/routes.rb*
+### Routes
 
 ```ruby
 Rails.application.routes.draw do
