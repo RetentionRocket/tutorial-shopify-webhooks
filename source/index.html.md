@@ -187,7 +187,7 @@ The generator will create a file *app/models/shop.rb*. Modify the file by adding
 
 Now the model includes the `ShopifyApp::SessionStorage` concern from the shopify_app gem, adding two methods to make it available as a `SessionRepository`. This will make it possible to use the Shop model for persisting the authentication token.
 
-The shopify_app generator will create a database migration (see the adjacent code column). Modify the migration to make sure the columns are not null and the index is unique.
+The shopify_app generator will create a database migration. Modify the migration to make sure the columns are not null and the index is unique (see the adjacent code column).
 
 ```ruby
 class CreateShops < ActiveRecord::Migration[5.2]
