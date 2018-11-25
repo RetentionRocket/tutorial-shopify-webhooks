@@ -246,7 +246,7 @@ Rails.application.routes.draw do
   mount ShopifyApp::Engine, at: '/'
 end
 ```
-Modify the file *config/application.rb*. Add the shopify_app engine:
+Modify the file *config/routes.rb*. Add the shopify_app engine:
 
 `mount ShopifyApp::Engine, at: '/'`
 
