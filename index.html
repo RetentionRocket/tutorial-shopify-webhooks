@@ -410,7 +410,7 @@
 
 <p>Now the model includes the <code>ShopifyApp::SessionStorage</code> concern from the shopify_app gem, adding two methods to make it available as a <code>SessionRepository</code>. This will make it possible to use the Shop model for persisting the authentication token.</p>
 
-<p>The shopify_app generator will create a database migration (see the adjacent code column). Modify the migration to make sure the columns are not null and the index is unique.</p>
+<p>The shopify_app generator will create a database migration. Modify the migration to make sure the columns are not null and the index is unique (see the adjacent code column).</p>
 <pre class="highlight ruby tab-ruby"><code><span class="k">class</span> <span class="nc">CreateShops</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span><span class="p">[</span><span class="mi">5</span><span class="o">.</span><span class="mi">2</span><span class="p">]</span>
   <span class="k">def</span> <span class="nf">change</span>
     <span class="n">create_table</span> <span class="ss">:shops</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
@@ -457,7 +457,7 @@
   <span class="n">mount</span> <span class="no">ShopifyApp</span><span class="o">::</span><span class="no">Engine</span><span class="p">,</span> <span class="ss">at: </span><span class="s1">'/'</span>
 <span class="k">end</span>
 </code></pre>
-<p>Modify the file <em>config/application.rb</em>. Add the shopify_app engine:</p>
+<p>Modify the file <em>config/routes.rb</em>. Add the shopify_app engine:</p>
 
 <p><code>mount ShopifyApp::Engine, at: &#39;/&#39;</code></p>
 
